@@ -10,20 +10,24 @@ public class Tile : MonoBehaviour
     public int y;
 
     private Item item;
-    
+
     public static List<Tile> CurrentLink = new List<Tile>();
+
+    public bool IsSelected { get; set; }
 
     public Item Item
     {
         get => item;
-
         set
         {
             if (item == value)
                 return;
 
             item = value;
-            icon.sprite = item.sprite;
+            if (icon != null && item != null && item.sprite != null)
+            {
+                icon.sprite = item.sprite;
+            }
         }
     }
     
@@ -46,14 +50,30 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        button.onClick.AddListener(() => Board.Instance.Select(this));
+        if (button != null && Board.Instance != null)
+        {
+            button.onClick.AddListener(() => Board.Instance.Select(this));
+        }
     }
     
     public void SetButtonColor(Color color)
     {
-        var colors = button.colors;
-        colors.normalColor = color;
-        button.colors = colors;
+        if (button != null)
+        {
+            try
+            {
+                ColorBlock colors = button.colors;
+                colors.normalColor = color;
+                colors.highlightedColor = color;
+                colors.selectedColor = color;
+                colors.pressedColor = color;
+                button.colors = colors;
+            }
+            catch (System.Exception)
+            {
+                // Nesne yok edilmişse sessizce geç
+            }
+        }
     }
 
     public List<Tile> GetConnectedTiles(HashSet<Tile> exclude = null)
@@ -106,7 +126,7 @@ public class Tile : MonoBehaviour
 
         foreach (var tile in CurrentLink)
         {
-            tile.SetButtonColor(Color.white); // Renkleri sıfırla
+            tile.SetButtonColor(Color.white);
         }
 
         CurrentLink.Clear();

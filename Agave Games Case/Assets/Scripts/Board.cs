@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,9 +19,9 @@ public class Board : MonoBehaviour
     
     public Tile[,] tiles { get; private set; }
 
-    public int width => tiles.GetLength(0);
+    public int width => rows != null ? rows.Max(row => row.tiles.Length) : 0;
 
-    public int height => tiles.GetLength(1);
+    public int height => rows != null ? rows.Length : 0;
 
     private const float TweenDuration = 0.25f;
 
@@ -36,73 +36,111 @@ public class Board : MonoBehaviour
     private async void Start()
     {
         await ItemManager.Initialize();
-        tiles = new Tile[rows.Max(row => row.tiles.Length), rows.Length];
+        
+        tiles = new Tile[width, height];
 
         for (var y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                var tile = rows[y].tiles[x];
-
-                tile.x = x;
-                tile.y = y;
-                
-                tile.Item = ItemManager.Items[Random.Range(0, ItemManager.Items.Count)];
-
-                tiles[x, y] = tile;
+                if (rows != null && y < rows.Length && x < rows[y].tiles.Length)
+                {
+                    var tile = rows[y].tiles[x];
+                    
+                    if (tile != null)
+                    {
+                        tile.x = x;
+                        tile.y = y;
+                        
+                        if (ItemManager.Items != null && ItemManager.Items.Count > 0)
+                        {
+                            tile.Item = ItemManager.Items[Random.Range(0, ItemManager.Items.Count)];
+                        }
+                        
+                        tiles[x, y] = tile;
+                        tile.SetButtonColor(Color.white);
+                    }
+                }
             }
         }
     }
     
     void Update()
     {
-        if (tiles == null || tiles[0, 0] == null) return;
+        if (tiles == null || tiles.GetLength(0) == 0 || tiles.GetLength(1) == 0) return;
     }
     
-       public async void Select(Tile tile)
+    public async void Select(Tile tile)
     {
-        if (_selection.Contains(tile))
+        if (tile == null || _selection.Contains(tile))
             return;
 
         if (_selection.Count == 0)
         {
             _selection.Add(tile);
-            tile.SetButtonColor(Color.cyan); // Seçilen tile'ın rengini açık mavi yap
+            tile.SetButtonColor(Color.cyan);
         }
         else if (_selection.Count == 1)
         {
             if (Array.IndexOf(_selection[0].Neighbors, tile) != -1)
             {
                 _selection.Add(tile);
-                tile.SetButtonColor(Color.cyan); // Seçilen tile'ın rengini açık mavi yap
+                tile.SetButtonColor(Color.cyan);
             }
             else
             {
-                _selection[0].SetButtonColor(Color.white); // Rengi sıfırla
-                _selection.Clear();
+                ResetSelections();
                 _selection.Add(tile);
-                tile.SetButtonColor(Color.cyan); // Seçilen tile'ın rengini açık mavi yap
+                tile.SetButtonColor(Color.cyan);
             }
         }
 
         if (_selection.Count < 2) return;
 
-        Debug.Log($"Selected Tiles at ({_selection[0].x}, {_selection[0].y}) and ({_selection[1].x}, {_selection[1].y})");
-
         await Swap(_selection[0], _selection[1]);
 
         if (CanPop())
         {
-            Pop();
+            ResetSelections();
+            await Pop();
         }
         else
         {
             await Swap(_selection[0], _selection[1]);
+            ResetSelections();
         }
-
-        _selection[0].SetButtonColor(Color.white); // Rengi sıfırla
-        _selection[1].SetButtonColor(Color.white); // Rengi sıfırla
-        _selection.Clear();
+        
+    }
+    
+    private void ResetSelections()
+    {
+        if (_selection != null)
+        {
+            foreach (var tile in _selection)
+            {
+                if (tile != null)
+                {
+                    tile.SetButtonColor(Color.white);
+                }
+            }
+            _selection.Clear();
+        }
+    }
+    
+    private void ResetAllTiles()
+    {
+        if (tiles == null) return;
+        
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (x < width && y < height && tiles[x, y] != null)
+                {
+                    tiles[x, y].SetButtonColor(Color.white);
+                }
+            }
+        }
     }
 
     public async Task Swap(Tile tile1, Tile tile2)
@@ -127,6 +165,8 @@ public class Board : MonoBehaviour
         tile2.icon = icon1;
 
         (tile1.Item, tile2.Item) = (tile2.Item, tile1.Item);
+        
+        return;
     }
 
     private bool CanPop()
@@ -135,7 +175,7 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if (tiles[x, y].GetConnectedTiles().Skip(1).Count() >= 2)
+                if (x < width && y < height && tiles[x, y] != null && tiles[x, y].GetConnectedTiles().Skip(1).Count() >= 2)
                     return true;
             }
         }
@@ -143,12 +183,15 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    private async void Pop()
+    private async Task Pop()
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
+                if (x >= width || y >= height || tiles[x, y] == null)
+                    continue;
+                    
                 var tile = tiles[x, y];
 
                 var connectedTiles = tile.GetConnectedTiles();
@@ -159,10 +202,22 @@ public class Board : MonoBehaviour
                 var deflateSequence = DOTween.Sequence();
 
                 foreach (var connectedTile in connectedTiles)
-                    deflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.zero, TweenDuration));
+                {
+                    if (connectedTile != null && connectedTile.icon != null)
+                    {
+                        deflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.zero, TweenDuration));
+                    }
+                }
                 
-                ScoreCounter.Instance.Score += tile.Item.value * connectedTiles.Count;
-                audioSource.PlayOneShot(collectionSound);
+                if (ScoreCounter.Instance != null)
+                {
+                    ScoreCounter.Instance.Score += tile.Item.value * connectedTiles.Count;
+                }
+                
+                if (audioSource != null && collectionSound != null)
+                {
+                    audioSource.PlayOneShot(collectionSound);
+                }
 
                 await deflateSequence.Play().AsyncWaitForCompletion();
                 
@@ -170,9 +225,15 @@ public class Board : MonoBehaviour
 
                 foreach (var connectedTile in connectedTiles)
                 {
-                    connectedTile.Item = ItemManager.Items[Random.Range(0, ItemManager.Items.Count)];
-
-                    inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));
+                    if (connectedTile != null)
+                    {
+                        connectedTile.Item = ItemManager.Items[Random.Range(0, ItemManager.Items.Count)];
+                        if (connectedTile.icon != null)
+                        {
+                            inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));
+                        }
+                        connectedTile.SetButtonColor(Color.white);
+                    }
                 }
 
                 await inflateSequence.Play().AsyncWaitForCompletion();
@@ -181,6 +242,8 @@ public class Board : MonoBehaviour
                 y = 0;
             }
         }
+        
+        ResetAllTiles();
     }
     
     public void ProcessLink(List<Tile> link)
@@ -193,10 +256,61 @@ public class Board : MonoBehaviour
             tile.icon.transform.DOScale(Vector3.zero, TweenDuration).OnComplete(() =>
             {
                 tile.icon.transform.DOScale(Vector3.one, TweenDuration);
+                tile.SetButtonColor(Color.white);
             });
         }
 
-        ScoreCounter.Instance.Score += score;
-        Debug.Log($"Link yok edildi! Puan: {score}");
+        if (ScoreCounter.Instance != null)
+        {
+            ScoreCounter.Instance.Score += score;
+        }
+        
+        ResetAllTiles();
+    }
+
+    public async Task PopLinkedTiles(List<Tile> tilesToClear)
+    {
+        if (tilesToClear == null || tilesToClear.Count == 0)
+            return;
+            
+        var deflateSequence = DOTween.Sequence();
+        
+        foreach (var tile in tilesToClear)
+        {
+            if (tile != null && tile.icon != null)
+            {
+                deflateSequence.Join(tile.icon.transform.DOScale(Vector3.zero, TweenDuration));
+            }
+        }
+        
+        await deflateSequence.Play().AsyncWaitForCompletion();
+        
+        var inflateSequence = DOTween.Sequence();
+        
+        foreach (var tile in tilesToClear)
+        {
+            if (tile != null && tile.icon != null && ItemManager.Items != null && ItemManager.Items.Count > 0)
+            {
+                try
+                {
+                    tile.Item = ItemManager.Items[Random.Range(0, ItemManager.Items.Count)];
+                    inflateSequence.Join(tile.icon.transform.DOScale(Vector3.one, TweenDuration));
+                    tile.SetButtonColor(Color.white);
+                }
+                catch (System.Exception error)
+                {
+                    Debug.LogError("Tile is null: " + error.Message);
+                }
+            }
+        }
+        
+        await inflateSequence.Play().AsyncWaitForCompletion();
+        
+        ResetAllTiles();
+    }
+
+    public void KillTweens()
+    {
+        DOTween.KillAll();
     }
 }
