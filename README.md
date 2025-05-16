@@ -3,6 +3,7 @@
 🎮 **Agave Games** is a Match-3 style puzzle game developed in Unity, featuring a drag-based linking system where players connect matching tiles by dragging between them.
 
 🎥 Watch the gameplay in action:
+
 [![Gameplay Video](https://img.youtube.com/vi/b-Uj_H_YbBY/0.jpg)](https://youtube.com/shorts/b-Uj_H_YbBY?feature=share)
 
 ## 🔧 Game Mechanics
@@ -99,6 +100,7 @@ This project is intended for educational and evaluation purposes only.
 ---
 
 🎥 Watch the gameplay in action:
+
 [![Gameplay Video](https://img.youtube.com/vi/b-Uj_H_YbBY/0.jpg)](https://youtube.com/shorts/b-Uj_H_YbBY?feature=share)
 
 Start your puzzle-solving journey and contribute to improving Agave Games! If you have any questions or feedback, feel free to reach out. 🚀
