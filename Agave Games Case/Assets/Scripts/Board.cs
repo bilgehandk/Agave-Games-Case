@@ -196,9 +196,7 @@ public class Board : MonoBehaviour
     
     public async void EndDrag()
     {
-        // Linkleri hemen temizle
         ClearLinks();
-        
         if (_draggedTiles.Count >= 3)
         {
             if (ScoreCounter.Instance != null)
@@ -206,12 +204,10 @@ public class Board : MonoBehaviour
                 int value = _draggedTiles[0].Item.value;
                 ScoreCounter.Instance.Score += value * _draggedTiles.Count;
             }
-            
             if (audioSource != null && collectionSound != null)
             {
                 audioSource.PlayOneShot(collectionSound);
             }
-            
             await PopLinkedTiles(_draggedTiles);
         }
         else
