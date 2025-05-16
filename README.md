@@ -1,16 +1,19 @@
 # Agave Games Case
 
-Agave Games is a Match-3 style puzzle game developed in Unity, featuring a drag-based linking system where players connect matching tiles by dragging between them.
+🎮 **Agave Games** is a Match-3 style puzzle game developed in Unity, featuring a drag-based linking system where players connect matching tiles by dragging between them.
 
-## Game Mechanics
+🎥 Watch the gameplay in action:
+[![Gameplay Video](https://img.youtube.com/vi/b-Uj_H_YbBY/0.jpg)](https://youtube.com/shorts/b-Uj_H_YbBY?feature=share)
 
-* Drag-based tile matching system (no swipe mechanics)
-* Visual linking between connected tiles
-* Matched tiles disappear when a valid chain is created (3+ tiles)
-* Score tracking based on matched tile values
-* Limited moves gameplay with win/lose conditions
+## 🔧 Game Mechanics
 
-## Folder Structure
+* 🧩 Drag-based tile matching system (no swipe mechanics)
+* ✨ Visual linking between connected tiles
+* 💥 Matched tiles disappear when a valid chain is created (3+ tiles)
+* 🏆 Score tracking based on matched tile values
+* ⏳ Limited moves gameplay with win/lose conditions
+
+## 📂 Folder Structure
 
 ```
 Assets/
@@ -33,14 +36,14 @@ Assets/
 |-- TextMesh Pro/           # Text rendering assets
 ```
 
-## Key Features
+## 🌟 Key Features
 
-* **Link Visualization**: Real-time visual feedback showing connections between tiles
-* **Adaptive Links**: Links automatically orient based on direction (horizontal/vertical)
-* **Score Animation**: Visual score feedback with floating text
-* **Tile Animations**: Smooth animations for tile interactions using DOTween
+* **🔗 Link Visualization**: Real-time visual feedback showing connections between tiles
+* **🌀 Adaptive Links**: Links automatically orient based on direction (horizontal/vertical)
+* **💡 Score Animation**: Visual score feedback with floating text
+* **🎥 Tile Animations**: Smooth animations for tile interactions using DOTween
 
-## Technologies
+## 🛠️ Technologies
 
 * Unity
 * C#
@@ -49,7 +52,7 @@ Assets/
 * Unity Addressables (asset management)
 * Universal Render Pipeline
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
 1. Clone the repository:
 
@@ -61,17 +64,17 @@ Assets/
 4. Build Addressables via `Window > Asset Management > Addressables > Groups > Build > New Build`.
 5. Open the main scene from the `Scenes` folder and press Play.
 
-## Performance Considerations
+## ⚡ Performance Considerations
 
 * Uses optimized object pooling for link visualizations.
 * Efficiently manages animations to prevent memory leaks.
 * Properly cleans up resources when transitioning between scenes.
 
-## Development Notes
+## 📝 Development Notes
 
 This project demonstrates implementation of a drag-based matching system with visual linking between tiles, replacing the traditional swipe mechanics seen in many Match-3 games.
 
-## Features
+## 🎯 Features
 
 * Dynamic, scalable game board and tile system
 * Drag-and-drop chain creation for matching tiles
@@ -80,7 +83,7 @@ This project demonstrates implementation of a drag-based matching system with vi
 * Easily customizable items, board size, and win conditions
 * Performance-optimized asset loading with Unity Addressables
 
-## Contribution
+## 🤝 Contribution
 
 Contributions are welcome! Follow these steps to contribute:
 
@@ -89,10 +92,13 @@ Contributions are welcome! Follow these steps to contribute:
 3. Commit your changes with clear and descriptive messages.
 4. Submit a pull request for review.
 
-## License
+## 📜 License
 
 This project is intended for educational and evaluation purposes only.
 
 ---
 
-Start your puzzle-solving journey and contribute to improving Agave Games! If you have any questions or feedback, feel free to reach out.
+🎥 Watch the gameplay in action:
+[![Gameplay Video](https://img.youtube.com/vi/b-Uj_H_YbBY/0.jpg)](https://youtube.com/shorts/b-Uj_H_YbBY?feature=share)
+
+Start your puzzle-solving journey and contribute to improving Agave Games! If you have any questions or feedback, feel free to reach out. 🚀
