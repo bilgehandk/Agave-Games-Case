@@ -399,6 +399,7 @@
 -r:"Library/Bee/artifacts/1300b0aE.dag/UnityEngine.UI.ref.dll"
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.59f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.59f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
+"Assets/Resources/CreateWhiteSprite.cs"
 "Assets/Scripts/Board.cs"
 "Assets/Scripts/BoardAnimator.cs"
 "Assets/Scripts/DOTweenExtensions.cs"
@@ -417,9 +418,13 @@
 "Assets/Scripts/LineUtils.cs"
 "Assets/Scripts/LinkGameSetup.cs"
 "Assets/Scripts/LinkManager.cs"
+"Assets/Scripts/LinkObject.cs"
+"Assets/Scripts/LinkPrefab.cs"
+"Assets/Scripts/LinkVisualizer.cs"
 "Assets/Scripts/Row.cs"
 "Assets/Scripts/ScoreCounter.cs"
 "Assets/Scripts/Tile.cs"
+"Assets/Scripts/TileLink.cs"
 "Assets/Scripts/UI/EndScreen.cs"
 "Assets/Scripts/UI/GameEvents.cs"
 "Assets/Scripts/UI/GameScreen.cs"
@@ -430,6 +435,7 @@
 "Assets/Scripts/UI/UINavigator.cs"
 "Assets/Scripts/UI/UIScreen.cs"
 "Assets/Scripts/UI/UIScreenFactory.cs"
+"Assets/Scripts/WhiteSquareCreator.cs"
 -langversion:9.0
 /deterministic
 /optimize+

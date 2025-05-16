@@ -4,6 +4,7 @@ public class LinkGameSetup : MonoBehaviour
 {
     [SerializeField] private Board boardPrefab;
     [SerializeField] private LinkManager linkManagerPrefab;
+    [SerializeField] private Transform linkPrefab;
     
     [SerializeField] private bool setupInEditor = true;
     
@@ -49,6 +50,15 @@ public class LinkGameSetup : MonoBehaviour
             GameObject linkManagerGO = Instantiate(linkManagerPrefab.gameObject);
             linkManagerGO.name = "LinkManager";
             linkManager = linkManagerGO.GetComponent<LinkManager>();
+            
+            if (linkManager != null && linkPrefab != null)
+            {
+                var field = linkManager.GetType().GetField("linkPrefab", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                if (field != null)
+                {
+                    field.SetValue(linkManager, linkPrefab);
+                }
+            }
         }
     }
 

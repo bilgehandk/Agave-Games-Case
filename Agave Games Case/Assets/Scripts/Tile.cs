@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerUpHandler
 {
     public int x;
     public int y;
 
     private Item item;
-
-    public static List<Tile> CurrentLink = new List<Tile>();
 
     public bool IsSelected { get; set; }
 
@@ -35,9 +33,9 @@ public class Tile : MonoBehaviour
     public Button button;
 
     public Tile Left => x > 0 ? Board.Instance.tiles[x - 1, y] : null;
-    public Tile Right => x < Board.Instance.width - 1 ? Board.Instance.tiles[x + 1, y] : null;
+    public Tile Right => x < Board.Instance.Width - 1 ? Board.Instance.tiles[x + 1, y] : null;
     public Tile Top => y > 0 ? Board.Instance.tiles[x, y - 1] : null;
-    public Tile Bottom => y < Board.Instance.height - 1 ? Board.Instance.tiles[x, y + 1] : null;
+    public Tile Bottom => y < Board.Instance.Height - 1 ? Board.Instance.tiles[x, y + 1] : null;
 
     public Tile[] Neighbors => new[]
     {
@@ -47,12 +45,21 @@ public class Tile : MonoBehaviour
         Bottom,
     };
     
-
+    public Vector3 GetCenterPosition()
+    {
+        if (icon != null)
+        {
+            return icon.transform.position;
+        }
+        
+        return transform.position;
+    }
+    
     private void Start()
     {
-        if (button != null && Board.Instance != null)
+        if (button != null)
         {
-            button.onClick.AddListener(() => Board.Instance.Select(this));
+            button.onClick.RemoveAllListeners();
         }
     }
     
@@ -71,7 +78,7 @@ public class Tile : MonoBehaviour
             }
             catch (System.Exception)
             {
-                // Nesne yok edilmişse sessizce geç
+                Debug.LogWarning($"Failed to set button color on tile at position ({x}, {y})");
             }
         }
     }
@@ -91,7 +98,7 @@ public class Tile : MonoBehaviour
 
         foreach (var neighbor in Neighbors)
         {
-            if (neighbor == null || exclude.Contains(neighbor) || neighbor.Item != Item) continue;
+            if (neighbor == null || exclude.Contains(neighbor) || !neighbor.Item.Equals(Item)) continue;
 
             result.AddRange(neighbor.GetConnectedTiles(exclude));
         }
@@ -101,34 +108,25 @@ public class Tile : MonoBehaviour
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (CurrentLink.Count == 0)
+        if (Board.Instance != null)
         {
-            CurrentLink.Add(this);
-            SetButtonColor(Color.cyan); // İlk seçilen çipin rengini değiştir
+            Board.Instance.StartDrag(this);
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CurrentLink.Count > 0 && !CurrentLink.Contains(this) && Item == CurrentLink[0].Item)
+        if (Input.GetMouseButton(0) && Board.Instance != null)
         {
-            CurrentLink.Add(this);
-            SetButtonColor(Color.cyan); // Linke eklenen çipin rengini değiştir
+            Board.Instance.DragToTile(this);
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (CurrentLink.Count > 1)
+        if (Board.Instance != null)
         {
-            Board.Instance.ProcessLink(CurrentLink);
+            Board.Instance.EndDrag();
         }
-
-        foreach (var tile in CurrentLink)
-        {
-            tile.SetButtonColor(Color.white);
-        }
-
-        CurrentLink.Clear();
     }
 }

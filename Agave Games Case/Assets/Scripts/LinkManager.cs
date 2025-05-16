@@ -142,9 +142,9 @@ public class LinkManager : MonoBehaviour
         {
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, 10f));
             
-            for (int x = 0; x < Board.Instance.width; x++)
+            for (int x = 0; x < Board.Instance.Width; x++)
             {
-                for (int y = 0; y < Board.Instance.height; y++)
+                for (int y = 0; y < Board.Instance.Height; y++)
                 {
                     Tile tile = Board.Instance.tiles[x, y];
                     if (tile == null) continue;
@@ -306,7 +306,6 @@ public class LinkManager : MonoBehaviour
             }
             catch (System.Exception)
             {
-                // Hata olursa sessizce geç
             }
         }
         
@@ -317,7 +316,6 @@ public class LinkManager : MonoBehaviour
         }
         catch (System.Exception)
         {
-            // Oyun bitiminde bu işlem hata verirse sessizce geç
         }
         
         ClearChain();

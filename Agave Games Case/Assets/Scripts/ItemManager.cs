@@ -6,7 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public static class ItemManager
 {
-    public static List<Item> Items= new List<Item>();
+    public static List<Item> Items = new List<Item>();
     
     public static async Task Initialize()
     {
@@ -17,11 +17,12 @@ public static class ItemManager
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             Items.AddRange(handle.Result);
-            Debug.Log($"{Items.Count} uploaded");
         }
-        else
-        {
-            Debug.LogError("Addressable asset have a error.");
-        }
+    }
+
+    public static Item GetRandomItem()
+    {
+        if (Items == null || Items.Count == 0) return null;
+        return Items[Random.Range(0, Items.Count)];
     }
 }

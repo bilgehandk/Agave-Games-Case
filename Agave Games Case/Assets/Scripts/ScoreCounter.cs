@@ -1,31 +1,20 @@
-
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class ScoreCounter : MonoBehaviour
 {
     private int _score;
-
-    public static ScoreCounter Instance
-    {
-        get;
-
-        private set;
-    }
+    public static ScoreCounter Instance { get; private set; }
 
     public int Score
     {
         get => _score;
-
         set
         {
             if (_score == value)
                 return;
 
             _score = value;
-         
             scoreText.SetText($"Score: {_score}");
         }
     }

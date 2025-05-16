@@ -185,8 +185,8 @@ public class GameScreen : UIScreen
     
     private async void ResetBoard()
     {
-        if (Board.Instance == null || Board.Instance.width <= 0 || 
-            Board.Instance.height <= 0 || Board.Instance.tiles == null)
+        if (Board.Instance == null || Board.Instance.Width <= 0 || 
+            Board.Instance.Height <= 0 || Board.Instance.tiles == null)
         {
             return;
         }
@@ -204,21 +204,21 @@ public class GameScreen : UIScreen
             List<Tile> validTiles = new List<Tile>();
             List<Item> newItems = new List<Item>();
             
-            PrepareNewTiles(Board.Instance.width, Board.Instance.height, validTiles, newItems);
+            PrepareNewTiles(Board.Instance.Width, Board.Instance.Height, validTiles, newItems);
             ResetTileAnimations(validTiles);
             AnimateTileChanges(validTiles, newItems);
         }
         catch
         {
-            FallbackBoardReset(Board.Instance.width, Board.Instance.height);
+            FallbackBoardReset(Board.Instance.Width, Board.Instance.Height);
         }
     }
     
     private void PrepareNewTiles(int width, int height, List<Tile> validTiles, List<Item> newItems)
     {
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < Board.Instance.Height; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Board.Instance.Width; x++)
             {
                 Tile tile = Board.Instance.tiles[x, y];
                 if (tile == null || tile.icon == null || tile.icon.transform == null) continue;
@@ -295,9 +295,9 @@ public class GameScreen : UIScreen
     {
         if (ItemManager.Items == null || ItemManager.Items.Count == 0) return;
         
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < Board.Instance.Height; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Board.Instance.Width; x++)
             {
                 Tile tile = Board.Instance.tiles[x, y];
                 if (tile == null) continue;
