@@ -69,6 +69,7 @@ public class EndScreen : UIScreen
     {
         if (Board.Instance == null || Board.Instance.gameObject == null) return;
         
+        Board.Instance.KillTweens();
         var audioSource = Board.Instance.GetComponent<AudioSource>();
         if (audioSource != null && audioSource.gameObject != null && !audioSource.enabled)
         {
