@@ -180,11 +180,14 @@ public class Board : MonoBehaviour
     
     private void ClearLinks()
     {
-        foreach (GameObject linkObject in _linkObjects)
+        if (_linkObjects == null || _linkObjects.Count == 0)
+            return;
+            
+        for (int i = _linkObjects.Count - 1; i >= 0; i--)
         {
-            if (linkObject != null)
+            if (_linkObjects[i] != null)
             {
-                Destroy(linkObject);
+                DestroyImmediate(_linkObjects[i]);
             }
         }
         
@@ -193,6 +196,9 @@ public class Board : MonoBehaviour
     
     public async void EndDrag()
     {
+        // Linkleri hemen temizle
+        ClearLinks();
+        
         if (_draggedTiles.Count >= 3)
         {
             if (ScoreCounter.Instance != null)
@@ -212,8 +218,6 @@ public class Board : MonoBehaviour
         {
             ResetDraggedTiles();
         }
-        
-        ClearLinks();
     }
     
     private void ResetDraggedTiles()
