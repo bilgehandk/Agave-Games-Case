@@ -152,8 +152,4 @@ public class GameUI : MonoBehaviour
         }
     }
     
-    public UIScreen GetCurrentScreen()
-    {
-        return screens.TryGetValue(currentScreenType, out UIScreen screen) ? screen : null;
-    }
 }

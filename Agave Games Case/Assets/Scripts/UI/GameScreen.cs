@@ -406,16 +406,6 @@ public class GameScreen : UIScreen
         }
     }
     
-    public void NavigateToEndScreen()
-    {
-        GameEvents.OnScreenChange(GameScreenType.EndScreen);
-    }
-    
-    public void NavigateToStartScreen()
-    {
-        GameEvents.OnScreenChange(GameScreenType.StartScreen);
-    }
-    
     private void Update()
     {
         if (!gameObject.activeInHierarchy) return;
@@ -459,27 +449,4 @@ public class GameScreen : UIScreen
         }
     }
     
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (scoreText == null || movesText == null)
-        {
-            var textComponents = GetComponentsInChildren<TextMeshProUGUI>(true);
-            if (textComponents.Length > 0)
-            {
-                foreach (var text in textComponents)
-                {
-                    if (text.name.ToLower().Contains("score") && scoreText == null)
-                    {
-                        scoreText = text;
-                    }
-                    if (text.name.ToLower().Contains("move") && movesText == null)
-                    {
-                        movesText = text;
-                    }
-                }
-            }
-        }
-    }
-#endif
 }
