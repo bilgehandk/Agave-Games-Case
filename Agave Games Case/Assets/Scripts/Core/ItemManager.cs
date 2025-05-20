@@ -19,10 +19,4 @@ public static class ItemManager
             Items.AddRange(handle.Result);
         }
     }
-
-    public static Item GetRandomItem()
-    {
-        if (Items == null || Items.Count == 0) return null;
-        return Items[Random.Range(0, Items.Count)];
-    }
 }

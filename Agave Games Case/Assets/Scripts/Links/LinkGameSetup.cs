@@ -61,24 +61,4 @@ public class LinkGameSetup : MonoBehaviour
             }
         }
     }
-
-    public void ResetGame()
-    {
-        if (board != null)
-        {
-            DestroyImmediate(board.gameObject);
-            board = null;
-        }
-        
-        if (linkManager != null)
-        {
-            DestroyImmediate(linkManager.gameObject);
-            linkManager = null;
-        }
-        
-        if (ScoreCounter.Instance != null)
-            ScoreCounter.Instance.Score = 0;
-        
-        scoreCounter = null;
-    }
 }

@@ -30,17 +30,6 @@ public class GlobalTweenManager : MonoBehaviour
         GameEvents.BeforeScreenChange += KillAllTweens;
     }
     
-    public static Sequence CreateSafeSequence(string id = null)
-    {
-        Sequence sequence = DOTween.Sequence();
-        
-        if (!string.IsNullOrEmpty(id))
-            sequence.SetId(id);
-        
-        sequence.SetAutoKill(true);
-        return sequence;
-    }
-    
     public void KillAllTweens()
     {
         try
@@ -48,12 +37,10 @@ public class GlobalTweenManager : MonoBehaviour
             DOTween.KillAll(true);
             DOTween.Clear(true);
         }
-        catch { }
-    }
-    
-    public static bool IsValidForTween(Transform transform)
-    {
-        return transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy;
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error while killing all tweens: {e.Message}");
+        }
     }
     
     private void OnDestroy()

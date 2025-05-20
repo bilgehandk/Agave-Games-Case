@@ -25,7 +25,6 @@ public class GameState : MonoBehaviour
     }
 
     private State currentState = State.Playing;
-    public State CurrentState => currentState;
     
     public void ResetState()
     {
